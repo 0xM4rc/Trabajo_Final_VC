@@ -1,29 +1,6 @@
 # Trabajo de curso VC
 
-## Intorducción
-En la actualidad, la seguridad vial se ha convertido en un aspecto prioritario 
-para gobiernos, empresas y la sociedad en general. El aumento en el número de 
-vehículos en circulación, el crecimiento urbano y la complejidad de las 
-infraestructuras de transporte hacen que sea cada vez más necesario 
-desarrollar soluciones tecnológicas que faciliten la toma de decisiones y la 
-prevención de accidentes. En este contexto, la visión por computador ofrece 
-herramientas avanzadas para la detección y el análisis de elementos en 
-entornos de tráfico, proporcionando información en tiempo real para la 
-mejora de la seguridad y la optimización de la movilidad.
-
-Este trabajo propone el uso de la arquitectura YOLO (You Only Look Once) 
-para la detección de componentes clave en escenarios de tráfico (personas, 
-vehículos y señales), complementando dicha detección con la segmentación de 
-la vía para un mayor entendimiento del entorno vial. El objetivo principal es 
-diseñar un sistema capaz de procesar y analizar de forma eficiente las 
-imágenes de tráfico, ofreciendo resultados de notoria precisión para futuras 
-aplicaciones como sistemas de asistencia a la conducción autónoma, monitoreo 
-del tránsito o identificación de situaciones de riesgo. Mediante esta 
-propuesta, se busca contribuir al desarrollo de soluciones más seguras, 
-robustas y eficientes para la gestión del tráfico y la protección de todos 
-los usuarios de la vía.
-
-## Datasets
+## Datasets empleados
 
 ### Señales de tráfico
 El dataset empleado en este proyecto proviene del siguiente [cojunto de datos](https://universe.roboflow.com/radu-oprea-r4xnm/traffic-signs-detection-europe) proveniente de roboflow.
@@ -116,29 +93,30 @@ ALLOWED_CLASSES = {
 
 ### Detección de señales
 
-Para el módulo de detección de señales, se implement el modelo YOLOv11n con el propósito de optimizar la relación entre precisión y velocidad de cómputo. Este balance es crucial en sistemas embebidos para vehículos, donde los recursos son limitados y la capacidad de procesamiento en tiempo real es un factor determinante. A continuación, se puede observar cada métrica obtenida durante el entrenamiento y validación del modelo:
+Para el módulo de detección de señales, se implement el modelo YOLOv11n con el propósito de optimizar la relación entre precisión y velocidad de cómputo. Este balance es crucial en sistemas embebidos para vehículos, donde los recursos son limitados y la capacidad de procesamiento en tiempo real es un factor determinante. 
 
-![alt text](./assets/images/training_results/traffic_signs_model/results.png)
-
-Durante el entrenamiento y validación, las métricas de pérdida, como box_loss, cls_loss, y dfl_loss, disminuyeron consistentemente, indicando una mejora en la localización y clasificación de señales.
-
-La precisión (precision(B)) alcanzó valores cercanos al 0.8, mostrando confiabilidad en las predicciones, mientras que el recall (recall(B)) aumentó, demostrando una detección efectiva de señales reales. La evaluación mediante la métrica mAP confirmó el buen desempeño del modelo, con un mAP50(B) superior a 0.8 y una tendencia positiva en mAP50-95(B), reflejando detecciones precisas en diferentes niveles de superposición.
-
-![alt text](./assets/images/training_results/traffic_signs_model/confusion_matrix_normalized.png)
-
-La matriz de confusión normalizada muestra el desempeño del modelo YOLOv11n en la clasificación de señales, con las clases reales en el eje horizontal y las predicciones en el vertical. La concentración de valores en la diagonal principal refleja que el modelo clasifica correctamente la mayoría de las señales, mientras que los valores fuera de esta diagonal indican confusiones entre clases.
-
-![alt text](assets/images/test1_signs_det.png)
+![alt text](assets/images/demo1.png)
 
 ### Segmentación de la carretera
 Para la segmentación de carreteras se hace uso de la versión de YOLO11n con capacidad de segmentación. A este modelo se le realiza un entrenamiento para que identifique y delimite (segmentar) la calzada con el dataset mencionado anteriormente con carreteras segmentadas.
 
 ![alt text](assets/images/seg-demo1.png)
 
-## Desenlace
----
+Alternativamente, se ha entrenado un modelo de DeepLab usando ResNet101 a tarvés del framework mmsegmentation.
+Para ello se hizo uso del docker que ofrecen para realizar el entrenamiento con GPU. 
 
-## Conclusiones y propuestas de ampliación
+Se ordeno el dataset de acuerdo a la estructura que indican en la documentación y se entreno con el siguiente comando:
+
+```sh
+ python tools/train.py configs/deeplabv3/deeplabv3_r101-d16-mg124_4xb2-40k_cityscapes-512x1024.py
+```
+
+y para la validación:
+```sh
+python tools/test.py configs/deeplabv3/deeplabv3_r101-d16-mg124_4xb2-40k_cityscapes-512x1024.py work_dirs/deeplabv3_r101-d16-mg124_4xb2-40k_cityscapes-512x1024/iter_40000.pth --out work_dirs/format_results
+```
+
+La carpeta a los pesos obtenidos se encuentra en el siguiente [enlace](https://alumnosulpgc-my.sharepoint.com/:f:/g/personal/marcos_sanchez107_alu_ulpgc_es/ElVmqv2X8C9BjtzK3CboHHEBtPeCj_amDlRtZEOVuLQs9g?e=Mtd49w).
 
 ## Autor
 Marcos Miguel Sáchez Antonio
